@@ -1,4 +1,5 @@
 name: Python application
+
 on: [push]
 
 jobs:
@@ -6,42 +7,30 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: [3.12.7]
-        poetry-version: [1.8.4]
+        python-version: [3.12, 3.13]
+
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v4
-        with:
-          python-version: ${{ matrix.python-version }}
+    - uses: actions/checkout@v2
 
-      - name: Install Poetry ${{ matrix.poetry-version }}
-        run: |
-          python -m ensurepip
-          python -m pip install --upgrade pip
-          python -m pip install poetry==${{ matrix.poetry-version }}
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
 
-      - name: Load environment variables
-        run: |
-          if [ -f ./env.dev ]; then
-            echo "Loading environment variables from env.dev"
-            while IFS= read -r line; do
-              if [[ ! $line =~ ^# && $line ]]; then
-                echo "$line" | tr -d '\r' >> $GITHUB_ENV
-              fi
-            done < ./env.dev
-          fi
-      
-      - name: Verify Poetry installation
-        run: poetry --version
+    - name: Install poetry
+      run: |
+        python -m ensurepip
+        python -m pip install --upgrade pip
+        python -m pip install --upgrade poetry
+    - name: View poetry --help
+      run: poetry --help
 
-      - name: Install dependencies
-        run: poetry install
+    - name: Install dependencies
+      shell: bash
+      run: python -m poetry install
 
-      - name: Run migrations
-        run: poetry run python manage.py migrate
-
-      - name: Run tests
-        run: poetry run pytest
+    - name: Test
+      run: |
+        poetry run python manage.py test
