@@ -23,17 +23,6 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install poetry==${{ matrix.poetry-version }}
 
-      - name: Load environment variables
-        run: |
-          if [ -f ./env.dev ]; then
-            echo "Loading environment variables from env.dev"
-            while IFS= read -r line; do
-              if [[ ! $line =~ ^# && $line ]]; then
-                echo "$line" | tr -d '\r' >> $GITHUB_ENV
-              fi
-            done < ./env.dev
-          fi
-
       - name: Verify Poetry installation
         run: poetry --version
 
@@ -41,4 +30,4 @@ jobs:
         run: poetry install
 
       - name: Run tests
-        run: poetry run python manage.py test
+        run: poetry run pytest
