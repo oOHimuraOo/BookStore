@@ -1,0 +1,33 @@
+name: Python application
+on: [push]
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["pypy3.10", "3.9", "3.10", "3.11", "3.12", "3.13"]
+        poetry-version: [1.8.4]
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install Poetry ${{ matrix.poetry-version }}
+        run: |
+          python -m ensurepip
+          python -m pip install --upgrade pip
+          python -m pip install poetry==${{ matrix.poetry-version }}
+
+      - name: Verify Poetry installation
+        run: poetry --version
+
+      - name: Install dependencies
+        run: poetry install
+
+      - name: Run tests
+        run: poetry run python manage.py test
