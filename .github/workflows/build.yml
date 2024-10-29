@@ -33,12 +33,15 @@ jobs:
               fi
             done < ./env.dev
           fi
-
+      
       - name: Verify Poetry installation
         run: poetry --version
 
       - name: Install dependencies
         run: poetry install
+
+      - name: Run migrations
+        run: poetry run python manage.py migrate
 
       - name: Run tests
         run: poetry run pytest
