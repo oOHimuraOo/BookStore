@@ -29,7 +29,7 @@ jobs:
             echo "Loading environment variables from env.dev"
             while IFS= read -r line; do
               if [[ ! $line =~ ^# && $line ]]; then
-                echo "$line" >> $GITHUB_ENV
+                echo "$line" | tr -d '\r' >> $GITHUB_ENV
               fi
             done < ./env.dev
           fi
