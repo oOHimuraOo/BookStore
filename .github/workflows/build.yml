@@ -10,6 +10,11 @@ jobs:
         poetry-version: [1.8.4]
     runs-on: ubuntu-latest
 
+    env:
+      DJANGO_ALLOWED_HOSTS: "localhost 127.0.0.1"
+      DJANGO_DEBUG: "True"
+      DATABASE_URL: "postgres://user:password@localhost:5432/dbname"
+    
     steps:
       - uses: actions/checkout@v4
       - name: Set up Python ${{ matrix.python-version }}
@@ -22,14 +27,7 @@ jobs:
           python -m ensurepip
           python -m pip install --upgrade pip
           python -m pip install poetry==${{ matrix.poetry-version }}
-      
-      - name: Load environment variables
-        run: |
-          if [ -f ./env.dev ]; then
-            echo "Loading environment variables from env.dev"
-            export $(grep -v '^#' ./env.dev | xargs)
-          fi
-      
+
       - name: Verify Poetry installation
         run: poetry --version
 
