@@ -10,7 +10,6 @@ from order.models import Order
 from product.factories import CategoryFactory, ProductFactory
 
 
-
 class TestOrderViewSet(APITestCase):
 
     client = APIClient()
@@ -19,7 +18,7 @@ class TestOrderViewSet(APITestCase):
         self.user = UserFactory()
         token = Token.objects.create(user=self.user)
         token.save()
-        
+
         self.category = CategoryFactory(title="technology")
         self.product = ProductFactory(
             title="mouse", price=100, category=[self.category]
@@ -28,32 +27,31 @@ class TestOrderViewSet(APITestCase):
 
     def test_order(self):
         token = Token.objects.get(user__username=self.user.username)
-        self.client.credentials(HTTP_AUTHORIZATION='token ' + token.key)
-        response = self.client.get(
-            reverse("order-list", kwargs={"version": "v1"}))
+        self.client.credentials(HTTP_AUTHORIZATION="token " + token.key)
+        response = self.client.get(reverse("order-list", kwargs={"version": "v1"}))
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         order_data = json.loads(response.content)
         print(json.dumps(order_data, indent=4))
-        
+
         self.assertEqual(
-            order_data['results'][0]["product"][0]["title"], self.product.title
+            order_data["results"][0]["product"][0]["title"], self.product.title
         )
         self.assertEqual(
-            order_data['results'][0]["product"][0]["price"], self.product.price
+            order_data["results"][0]["product"][0]["price"], self.product.price
         )
         self.assertEqual(
-            order_data['results'][0]["product"][0]["active"], self.product.active
+            order_data["results"][0]["product"][0]["active"], self.product.active
         )
         self.assertEqual(
-            order_data['results'][0]["product"][0]["category"][0]["title"],
+            order_data["results"][0]["product"][0]["category"][0]["title"],
             self.category.title,
         )
 
     def test_create_order(self):
         token = Token.objects.get(user__username=self.user.username)
-        self.client.credentials(HTTP_AUTHORIZATION='token ' + token.key)
+        self.client.credentials(HTTP_AUTHORIZATION="token " + token.key)
         user = UserFactory()
         product = ProductFactory()
         data = json.dumps({"products_id": [product.id], "user": user.id})
