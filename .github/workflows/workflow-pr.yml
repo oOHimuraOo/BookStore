@@ -40,7 +40,7 @@ jobs:
           docker-compose exec -T web poetry add factory_boy@latest
 
       - name: Instalar versão compatível do flake8-bandit
-        run: docker-compose exec -T web pip install flake8-bandit==2.0.3
+        run: docker-compose exec -T web pip install flake8-bandit==2.1.2
 
       - name: Run migrations
         run: docker-compose exec -T web python manage.py migrate
