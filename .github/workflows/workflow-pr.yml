@@ -41,7 +41,7 @@ jobs:
         run: docker-compose exec -T web python manage.py migrate
 
       - name: Wemake Python Styleguide
-        uses: wemake-services/wemake-python-styleguide@latest
+        uses: wemake-services/wemake-python-styleguideg
         continue-on-error: true
         with:
           reporter: 'github-pr-review'
