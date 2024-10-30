@@ -39,9 +39,6 @@ jobs:
           docker-compose exec -T web poetry install
           docker-compose exec -T web poetry add factory_boy@latest
 
-      - name: Remove flake8-bandit (caso já esteja instalado)
-        run: docker-compose exec -T web pip uninstall -y flake8-bandit
-
       - name: Run migrations
         run: docker-compose exec -T web python manage.py migrate
 
@@ -49,7 +46,7 @@ jobs:
         run: docker-compose exec -T web poetry run pytest
 
       - name: Wemake Python Styleguide
-        uses: wemake-services/wemake-python-styleguide@0.16.0
+        uses: wemake-services/wemake-python-styleguide@0.19.2
         continue-on-error: true
         with:
           reporter: 'github-pr-review'
