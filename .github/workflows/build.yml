@@ -10,7 +10,7 @@ jobs:
         python-version: [3.12.7]
         poetry-version: [1.8.4]
     
-    runs on: ubuntu-latest
+    runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v4
