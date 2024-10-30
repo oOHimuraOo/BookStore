@@ -34,9 +34,10 @@ jobs:
         sudo apt-get install -y docker-compose
 
     - name: Build and start services
-      run: |
-        docker-compose up -d --build
-        docker-compose exec -T web poetry add factory_boy@lates
+      run: docker-compose up -d --build
+
+    - name: Installing and updating factory_boy
+        run: docker-compose exec -T web poetry add factory_boy@lates
 
     - name: Run migrations
       run: docker-compose exec -T web python manage.py migrate
