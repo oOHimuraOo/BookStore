@@ -12,10 +12,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
 
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v5
       with:
         python-version: ${{ matrix.python-version }}
 
@@ -24,13 +24,20 @@ jobs:
         python -m ensurepip
         python -m pip install --upgrade pip
         python -m pip install --upgrade poetry
+
     - name: View poetry --help
       run: poetry --help
 
-    - name: Install dependencies
-      shell: bash
-      run: python -m poetry install
+    - name: Install Docker Compose
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y docker-compose
+
+    - name: Build and start services
+      run: docker-compose up -d --build
+
+    - name: Run migrations
+      run: docker-compose exec web python manage.py migrate
 
     - name: Test
-      run: |
-        docker-compose exec web poetry run pytest
+      run: docker-compose exec web poetry run pytest
