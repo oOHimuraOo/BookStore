@@ -51,7 +51,7 @@ jobs:
         uses: wemake-services/wemake-python-styleguide@0.18.0
         continue-on-error: true
         with:
-          args: '--config=.flake8 .'
+          args: '--config=.flake8 --format=github-pr-review .'
           reporter: 'github-pr-review'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
