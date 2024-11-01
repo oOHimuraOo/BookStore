@@ -1,6 +1,8 @@
 name: Python Pull Request Workflow
 
 on: [pull_request]
+permissions:
+  pull-requests: write
 
 jobs:
   qa:
