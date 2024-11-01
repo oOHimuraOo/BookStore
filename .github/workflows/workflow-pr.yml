@@ -23,9 +23,6 @@ jobs:
         env:
           POETRY_VIRTUALENVS_CREATE: false
 
-      - name: View Poetry Help
-        run: poetry --help
-
       - name: Install Docker Compose
         run: |
           sudo apt-get update
@@ -34,7 +31,7 @@ jobs:
       - name: Build and start services
         run: docker-compose up -d --build
 
-      - name: Installing and updating dependencies and specifically factory boy
+      - name: Installing dependencies
         run: |
           docker-compose exec -T web poetry install
           docker-compose exec -T web poetry add factory_boy@latest
@@ -45,11 +42,11 @@ jobs:
       - name: Test
         run: docker-compose exec -T web poetry run pytest
 
-      - name: Wemake Python Styleguide
-        uses: wemake-services/wemake-python-styleguide@0.18.0
-        continue-on-error: true
+      - name: Run Flake8 with ReviewDog
+        uses: reviewdog/action-flake8@v1
         with:
-          args: '--config=.flake8 .'
-          reporter: 'github-pr-review'
+          flake8_flags: "--config=.flake8"
+          reporter: github-pr-review
+          level: warning
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
