@@ -43,10 +43,14 @@ jobs:
         run: docker-compose exec -T web poetry run pytest
 
       - name: Run Flake8 with ReviewDog
-        uses: reviewdog/action-flake8@v1
+        uses: reviewdog/reviewdog@v1
         with:
-          flake8_flags: "--config=.flake8"
+          name: flake8
           reporter: github-pr-review
           level: warning
+          filter_mode: added
+          flake8_flags: "--config=.flake8"
+          run: |
+            docker-compose exec -T web flake8 --config=.flake8 .
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
